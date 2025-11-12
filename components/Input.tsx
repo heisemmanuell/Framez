@@ -20,7 +20,7 @@ const Input: React.FC<InputProps> = (props) => {
       <TextInput 
         style={{flex: 1}}
         placeholderTextColor={theme.colors.textLight}
-        ref={props.inputRef}
+        ref={props.inputRef && props.inputRef}
         {...props}
       />
     </View>

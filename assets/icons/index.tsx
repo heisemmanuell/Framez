@@ -19,8 +19,9 @@ import Delete from './Delete'
 import Share from './Share'
 import More from './More'
 import Comment from './Comment'
+import Send from './Send'
 
-type IconName = 'home'| 'arrowLeft' | 'mail' | 'lock' | 'user' | 'heart' | 'plus' | 'logout' | 'edit' | 'call' | 'camera' | 'location' | 'image' | 'video' | 'delete' | 'more' | 'comment' | 'share'; // extend as you add more icons
+type IconName = 'home'| 'arrowLeft' | 'mail' | 'lock' | 'user' | 'heart' | 'plus' | 'logout' | 'edit' | 'call' | 'camera' | 'location' | 'image' | 'video' | 'delete' | 'more' | 'comment' | 'share' | 'send'; // extend as you add more icons
 
 type IconComponentProps = {
   height?: string | number;
@@ -49,6 +50,7 @@ const icons: Record<IconName, React.ComponentType<IconComponentProps>> = {
   share: Share,
   more: More,
   comment: Comment,
+  send: Send,
 };
 
 type IconProps = {

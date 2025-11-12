@@ -56,7 +56,14 @@ const MainLayout: React.FC = () => {
       screenOptions={{
         headerShown: false
       }}
+    >
+    <Stack.Screen 
+      name='(main)/postDetails'
+      options={{
+        presentation: 'modal'
+      }}
     />
+  </Stack>
   )
 }
 

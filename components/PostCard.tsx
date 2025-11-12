@@ -1,7 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Alert, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { theme } from '@/constants/theme'
-import { hp,wp } from '@/helpers/common'
+import { hp,stripHtmlTags,wp } from '@/helpers/common'
 import Avatar from './Avatar'
 import moment from 'moment'
 import Icon from '@/assets/icons'
@@ -9,6 +9,7 @@ import RenderHtml from 'react-native-render-html';
 import { Image } from 'expo-image'
 import { getSupabaseFileUrl } from '@/services/imageService'
 import { Video } from 'expo-av'
+import { createPostLike, removePostLike } from '@/services/postService'
 
 const textStyle = {
   color: theme.colors.dark,
@@ -30,6 +31,10 @@ const PostCard = ({
   currentUser,
   router,
   hasShadow = true,
+  showMoreIcon = true,
+  showDelete = false,
+  onDelete = () => {},
+  onEdit = () => {}
 }) => {
   const shadowStyles = {
     shadowOffset: {
@@ -41,11 +46,66 @@ const PostCard = ({
     elevation: 1
   }
 
-  const openPostDetails = () => {}
+  const [likes, setLikes] = useState([]);
+
+  useEffect(() => {
+    setLikes(item?.postLikes);
+  }, [])
+
+  const openPostDetails = () => {
+    if(!showMoreIcon) return null;
+    router.push({pathname: 'postDetails', params: {postId: item?.id}})
+  }
+
+  const onLike = async () => {
+    if(liked){
+      //remove like
+      let updatedLikes = likes.filter(like=> like.userId!=currentUser?.id);
+
+      setLikes([...updatedLikes])
+      let res = await removePostLike(item?.id, currentUser?.id);
+      console.log('removed like : ', res);
+      if(!res.success){
+        Alert.alert('Post', 'Oops, Something went sideways!')
+      }
+    }else{
+      //create like
+      let data ={
+        userId: currentUser?.id,
+        postId: item?.id
+      }
+      setLikes([...likes, data])
+      let res = await createPostLike(data);
+      console.log('added like : ', res);
+      if(!res.success){
+        Alert.alert('Post', 'Oops, Something went sideways!')
+      }
+    }  
+  }
+
+  const onShare = async()=>{
+    let content = {message: stripHtmlTags(item?.body)};
+    Share.share(content);
+  }
+
+  const handlePostDelete = () => {
+    Alert.alert('Confirm Delete', 'Are you sure you want to delete ?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+        onPress: () => console.log('modal cancelled'),
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => onDelete(item),
+      }
+    ])
+  }
 
   const createdAt = moment(item?.created_at).format("MMM D");
-  const liked = false;
-  const likes = [];
+  const liked = likes.filter(like => like.userId==currentUser?.id)[0]?true:false;
+ 
   return (
     <View style={[styles.container, hasShadow && shadowStyles]}>
       <View style={styles.header}>
@@ -62,9 +122,26 @@ const PostCard = ({
           </View>
         </View>
 
-        <TouchableOpacity onPress={openPostDetails}>
-          <Icon name='more' size={hp(3.4)} strokeWidth={3} color={theme.colors.text}/>
-        </TouchableOpacity>
+        {
+          showMoreIcon && (
+            <TouchableOpacity onPress={openPostDetails}>
+              <Icon name='more' size={hp(3.4)} strokeWidth={3} color={theme.colors.text}/>
+            </TouchableOpacity>
+          )
+        }
+
+        {
+          showDelete && currentUser.id == item?.userId && (
+            <View style={styles.actions}>
+              <TouchableOpacity onPress={() => onEdit(item)}>
+                <Icon name='edit' size={hp(2.5)} color={theme.colors.text}/>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handlePostDelete}>
+                <Icon name='delete' size={hp(2.5)} color={theme.colors.rose}/>
+              </TouchableOpacity>
+            </View>
+          )
+        }
       </View>
 
       {/* post body*/}
@@ -109,7 +186,7 @@ const PostCard = ({
       {/* like comment share */}
       <View style={styles.footer}>
         <View style={styles.footerButton}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onLike}>
             <Icon name='heart' size={24} fill={liked? theme.colors.rose: 'transparent'} color={liked? theme.colors.rose: theme.colors.textLight}/>
           </TouchableOpacity>
           <Text style={styles.count}>
@@ -119,17 +196,17 @@ const PostCard = ({
           </Text>
         </View>
         <View style={styles.footerButton}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={openPostDetails}>
             <Icon name='comment' size={24} color={theme.colors.textLight}/>
           </TouchableOpacity>
           <Text style={styles.count}>
             {
-              0
+              item?.comments[0]?.count
             }
           </Text>
         </View>
         <View style={styles.footerButton}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onShare}>
             <Icon name='share' size={24} color={theme.colors.textLight}/>
           </TouchableOpacity>
           
