@@ -1,50 +1,102 @@
-# Welcome to your Expo app 👋
+# Framez - Social Media App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Framez is a React Native social media application built with Expo, inspired by Instagram. It allows users to register, log in, create posts with text and images, view a feed of posts, and manage their profiles. The app features persistent authentication, real-time updates, and a responsive design optimized for Android and iOS.
 
-## Get started
+## Features Implemented
 
-1. Install dependencies
+### Authentication
+- **User Registration**: Secure sign-up process using email and password.
+- **Login and Logout**: Seamless authentication flow with session persistence across app restarts.
+- **Persistent Sessions**: Users remain logged in after closing and reopening the app, leveraging Supabase's session management.
 
+### Posts
+- **Create Posts**: Users can create posts containing text and/or images. Images are uploaded to Supabase Storage.
+- **Feed Display**: A chronological feed (most recent first) showing posts from all users, including author's name and timestamp.
+- **Post Details**: Detailed view of individual posts with comments and likes.
+
+### Profile
+- **User Profile**: Displays logged-in user's information (name, email, avatar if available).
+- **User Posts**: Shows all posts created by the current user.
+
+### Additional Features
+- **Comments**: Users can comment on posts.
+- **Likes**: Like/unlike posts with real-time updates.
+- **Rich Text Editor**: For creating posts with formatted text.
+- **Image Picker**: Select images from device gallery or camera.
+- **Responsive Layout**: Smooth navigation with bottom tabs and responsive UI components.
+- **Real-time Updates**: Leveraging Supabase's real-time capabilities for live feed and interactions.
+
+## Technical Requirements
+
+### Framework
+- **React Native**: Built with Expo for easy development and deployment.
+
+### Backend
+- **Supabase**: Chosen for its comprehensive backend-as-a-service features, including authentication, real-time database, and file storage.
+  - **Authentication**: Handles user sign-up, login, logout, and session persistence using Supabase Auth.
+  - **Database**: PostgreSQL-based real-time database for storing users, posts, comments, and likes.
+  - **Storage**: File storage for post images and videos using supabase.
+  - **Real-time**: Enables live updates for feeds, likes, and comments without manual polling.
+  - **Why Supabase?**: Provides a scalable, secure, and easy-to-integrate solution. It eliminates the need for separate servers, reduces development time, and offers built-in features like row-level security and automatic API generation.
+
+### Database Schema
+- **Users Table**: Stores user information (id, name, email, image).
+- **Posts Table**: Stores post data (id, userId, body, file, created_at).
+- **Comments Table**: Stores comments on posts.
+- **PostLikes Table**: Tracks likes on posts.
+
+## Installation and Setup
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/heisemmanuell/Framez.git
+   cd framez
+   ```
+
+2. **Install Dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the app
+3. **Configure Supabase**:
+   - Create a Supabase project at [supabase.com](https://supabase.com).
+   - Obtain your project URL and anon key.
+   - Add them to `constants/index.ts`:
+     ```typescript
+     export const supabaseUrl = 'your-supabase-url';
+     export const supabaseAnonKey = 'your-anon-key';
+     ```
 
+4. **Start the App**:
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+5. **Run on Devices**:
+   - Use Expo Go app on Android/iOS for testing.
+   - Or run on simulators/emulators.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Usage
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Welcome Screen**: Initial screen for new users.
+- **Sign Up/Login**: Register or log in to access the app.
+- **Home Feed**: View posts from all users.
+- **New Post**: Create a new post with text and images.
+- **Profile**: View and edit your profile, see your posts.
+- **Post Details**: Interact with individual posts (like, comment).
 
-## Get a fresh project
+## Deployment
 
-When you're ready, run:
+- **Testing**: Use Expo Go for quick testing on Android and iOS simulators/devices.
+- **Production Build**: Use EAS Build for optimized builds.
+- **Hosting**: The app is hosted on [appetize.io](https://appetize.io/app/b_2qal4l7u2phu2dvlrwlcfez4vq) for web-based testing and sharing.
 
-```bash
-npm run reset-project
-```
+## Tech Stack
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **Frontend**: React Native, Expo, TypeScript
+- **Backend**: Supabase (Auth, Database, Storage)
+- **UI Components**: Custom components with React Native Elements, Expo Vector Icons
+- **State Management**: React Context for authentication
+- **Image Handling**: Expo Image Picker, Supabase Storage
+- **Navigation**: Expo Router with file-based routing
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
