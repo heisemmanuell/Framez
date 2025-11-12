@@ -11,7 +11,7 @@ type IconProps = {
 const User = ({
   width = 24,
   height = 24,
-  strokeWidth = 1.5,
+  strokeWidth = 2,
   color = "#141B34",
   ...props
 }: IconProps) => (

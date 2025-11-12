@@ -6,8 +6,21 @@ import Mail from './Mail'
 import { theme } from '@/constants/theme'
 import Lock from './Lock'
 import User from './User'
+import Plus from './Plus'
+import Heart from './Heart'
+import Logout from './Logout'
+import Edit from './Edit'
+import Call from './Call'
+import Camera from './Camera'
+import Location from './Location'
+import Image from './Image'
+import Video from './Video'
+import Delete from './Delete'
+import Share from './Share'
+import More from './More'
+import Comment from './Comment'
 
-type IconName = 'home'| 'arrowLeft' | 'mail' | 'lock' | 'user'; // extend as you add more icons
+type IconName = 'home'| 'arrowLeft' | 'mail' | 'lock' | 'user' | 'heart' | 'plus' | 'logout' | 'edit' | 'call' | 'camera' | 'location' | 'image' | 'video' | 'delete' | 'more' | 'comment' | 'share'; // extend as you add more icons
 
 type IconComponentProps = {
   height?: string | number;
@@ -23,6 +36,19 @@ const icons: Record<IconName, React.ComponentType<IconComponentProps>> = {
   mail: Mail,
   lock: Lock,
   user: User,
+  heart: Heart,
+  plus: Plus,
+  logout: Logout,
+  edit: Edit,
+  call: Call,
+  camera: Camera,
+  location: Location,
+  image: Image,
+  video: Video,
+  delete: Delete,
+  share: Share,
+  more: More,
+  comment: Comment,
 };
 
 type IconProps = {

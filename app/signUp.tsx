@@ -9,6 +9,7 @@ import { theme } from '@/constants/theme'
 import Input from '@/components/Input'
 import Icon from '@/assets/icons'
 import Button from '@/components/Button'
+import { supabase } from '@/lib/supabase'
 
 const signUp = () => {
   const emailRef = useRef("");
@@ -17,9 +18,36 @@ const signUp = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if(!emailRef.current || !passwordRef.current) {
       Alert.alert('Sign Up', "Please fill all the fields");
+      return;
+    }
+
+    let name = nameRef.current.trim();
+    let email = emailRef.current.trim();
+    let password = passwordRef.current.trim();
+
+    setLoading(true);
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options:{
+        data: {
+          name
+        }
+      }
+    });
+    setLoading(false);
+
+    // const session = data?.session;
+
+    // console.log('session:', session);
+    // console.log('error:', error);
+
+    if(error) {
+      Alert.alert('Sign Up', error.message);
       return;
     }
   }
@@ -41,18 +69,18 @@ const signUp = () => {
         <Input 
           icon={<Icon name='user' size={26} strokeWidth={1.6} />}
           placeholder='Enter your name'
-          onChangeText={value=> nameRef.current = value}
+          onChangeText={(value: string) => (nameRef.current = value)}
         />
         <Input 
           icon={<Icon name='mail' size={26} strokeWidth={1.6} />}
           placeholder='Enter your email'
-          onChangeText={value=> emailRef.current = value}
+          onChangeText={(value: string) => (emailRef.current = value)}
         />
         <Input 
           icon={<Icon name='lock' size={26} strokeWidth={1.6} />}
           placeholder='Enter your password'
           secureTextEntry
-          onChangeText={value => passwordRef.current = value}
+          onChangeText={(value: string) => (passwordRef.current = value)}
         />
 
         <Button title={'Sign up'} loading={loading} onPress={onSubmit} />
